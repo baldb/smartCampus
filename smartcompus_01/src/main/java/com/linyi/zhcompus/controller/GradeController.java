@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.linyi.zhcompus.pojo.Grade;
 import com.linyi.zhcompus.service.GradeService;
 import com.linyi.zhcompus.utils.Result;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import java.util.List;
  * cool boy
  * 1.0
  */
+@Api(tags = "年级控制器")
 @RestController
 @RequestMapping("/sms/gradeController")
 @Slf4j
@@ -33,8 +37,13 @@ public class GradeController {
      * @param gradeName
      * @return
      */
+    @ApiOperation("查询Grade信息")
     @GetMapping("/getGrades/{pageNum}/{pageSize}")
-    public Result getGrades(@PathVariable Integer pageNum, @PathVariable Integer pageSize, String gradeName){
+    public Result getGrades(
+            @ApiParam("第几页的页数") @PathVariable Integer pageNum,
+            @ApiParam("每页输出的条数") @PathVariable Integer pageSize,
+            @ApiParam("模糊查询条件") String gradeName){
+
         log.info("当前页{}，总页数{}", pageNum, pageSize);
         // 分页
         Page<Grade> page = new Page<>(pageNum, pageSize);
@@ -48,8 +57,10 @@ public class GradeController {
      * @param grade
      * @return
      */
+    @ApiOperation("添加/修改Grade信息，,有id则修改，没有则添加")
     @PostMapping("/saveOrUpdateGrade")
-    public Result saveOrUpdateGrade(@RequestBody Grade grade) {
+    public Result saveOrUpdateGrade(
+            @ApiParam("Grade信息的JSON格式") @RequestBody Grade grade) {
         gradeService.saveOrUpdate(grade);
         return Result.ok();
     }
@@ -59,8 +70,10 @@ public class GradeController {
      * @param ids
      * @return
      */
+    @ApiOperation("删除Grade信息")
     @DeleteMapping("/deleteGrade")
-    public Result deleteGradeById(@RequestBody List<Integer> ids){
+    public Result deleteGradeById(
+            @ApiParam("要删除的所有年级id的JSON集合") @RequestBody List<Integer> ids){
         gradeService.removeByIds(ids);
         return Result.ok();
     }
@@ -69,6 +82,7 @@ public class GradeController {
      * 班级管理显示年级下拉框
      * @return
      */
+    @ApiOperation("班级管理显示年级下拉框")
     @GetMapping("/getGrades")
     public Result getGrades(){
         List<Grade> grades = gradeService.getGrades();

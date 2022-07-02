@@ -171,18 +171,22 @@ public class SystemController {
         Long userId = JwtHelper.getUserId(token);
         Integer userType = JwtHelper.getUserType(token);
         Map<String, Object> map = new LinkedHashMap<>();
-        if (userType == 1){
-            Admin admin = adminService.getAdminById(userId.intValue());
-            map.put("user",admin);
-            map.put("userType",1);
-        } else if (userType == 2) {
-            Student student = studentService.getStudentById(userId.intValue());
-            map.put("user",student);
-            map.put("userType",2);
-        } else if (userType == 3) {
-            Teacher teacher = teacherService.getTeacherById(userId.intValue());
-            map.put("user",teacher);
-            map.put("userType",3);
+        switch (userType){
+            case 1:
+                Admin admin = adminService.getAdminById(userId.intValue());
+                map.put("user",admin);
+                map.put("userType",1);
+                break;
+            case 2:
+                Student student = studentService.getStudentById(userId.intValue());
+                map.put("user",student);
+                map.put("userType",2);
+                break;
+            case 3:
+                Teacher teacher = teacherService.getTeacherById(userId.intValue());
+                map.put("user",teacher);
+                map.put("userType",3);
+                break;
         }
         return Result.ok(map);
     }
